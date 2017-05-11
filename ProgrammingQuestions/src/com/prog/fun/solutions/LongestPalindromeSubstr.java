@@ -9,10 +9,12 @@ public class LongestPalindromeSubstr {
 		testLongestPalindrome("", "");
 		testLongestPalindrome("abcbd", "bcb");
 		testLongestPalindrome("abaa", "aba");
-		testLongestPalindrome("aaba", "aba");
 		testLongestPalindrome("abaabaab", "baabaab");
+		testLongestPalindrome("abcda", "a");
 		testPalindrome("a", true);
 		testPalindrome("aa", true);
+		testPalindrome("ab", false);
+		testPalindrome("abc", false);
 		testPalindrome("aabbb", false);
 		testPalindrome("bcb", true);
 		testPalindrome("1234321", true);
@@ -51,20 +53,44 @@ public class LongestPalindromeSubstr {
 		for (int i = 0; i < s.length(); i++) {
 			// Try until currentStr is lesser than longestPalindromeLength
 			for (int currentStart = 0; (i - currentStart + 1) > longestPalindromeLength; currentStart++) {
-				// Java does End index - 1
-				String currentStr = s.substring(currentStart, (i + 1));
-				if (isPalindrome(currentStr) && longestPalindromeLength < currentStr.length()) {
-					longestPalindromeLength = currentStr.length();
+				int currLength = i - currentStart + 1;
+				if (isPalindrome(s, currentStart, i) && longestPalindromeLength < currLength) {
+					longestPalindromeLength = currLength;
 					start = currentStart;
 					end = i;
 				}
 			}
 		}
-
 		return s.substring(start, end + 1);
 	}
 
+	public boolean isPalindrome(String s, int start, int end) {
+		if (s == null || s.length() == 0) {
+			return false;
+		}
+
+		int midElementIdx = start + (end-start) / 2;
+
+		for (int i = start, j = end; i <= midElementIdx && j>=midElementIdx; i++, j--) {
+			char lvalue = s.charAt(i);
+			char rvalue = s.charAt(j);
+			if(i == j){
+				break;
+			} if(i == j-1 && lvalue == rvalue){
+				break;
+			} else if (lvalue != rvalue) {
+            	return false;
+			} 
+		}
+		return true;
+	}
+	
 	public boolean isPalindrome(String s) {
+		return isPalindrome(s, 0, s.length()-1);
+	}
+
+
+	public boolean isPalindromeUsingStack(String s) {
 		if (s == null || s.length() == 0) {
 			return false;
 		}
@@ -96,4 +122,5 @@ public class LongestPalindromeSubstr {
 
 		return true;
 	}
+
 }
